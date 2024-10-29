@@ -3,7 +3,9 @@
 
 ## Overview
 
-Our project introduces a novel car insurance pricing framework that incorporates **route risk** into premium calculations. With the increased adoption of autonomous and semi-autonomous vehicles (AVs), detailed route data for drivers is now accessible. This data allows us to assess the inherent risk of specific routes and adjust insurance premiums accordingly.
+Our project introduces a novel car insurance pricing framework that incorporates **route risk** into premium calculations. 
+With the increased adoption of autonomous and semi-autonomous vehicles (AVs), detailed route data for drivers is now accessible. 
+This data allows us to assess the inherent risk of specific routes and adjust insurance premiums accordingly.
 
 ## Features
 
@@ -22,72 +24,72 @@ Our project introduces a novel car insurance pricing framework that incorporates
 
 ### Computing Risk Metrics for Roads
 
-Each road segment `m_ij` is assigned a risk score based on:
+Each road segment $m_{ij}$ is assigned a risk score based on:
 
-- **Frequency of Accidents**: Estimated using Poisson regression to calculate the expected time between accidents `τ_accident`.
-- **Severity of Accidents**: Estimated using Gamma regression to determine the severity `s`.
+- **Frequency of Accidents**: Estimated using Poisson regression to calculate the expected time between accidents $\tau_{\text{accident}}$.
+- **Severity of Accidents**: Estimated using Gamma regression to determine the severity $s$.
 
 The risk score is calculated as:
 
-```
-m_ij = 1/τ_accident × s
-```
+$$
+m_{ij} = \frac{1}{\tau_{\text{accident}}} \times s
+$$
 
 ### Optimal Route Calculation
 
-Using the risk scores `m_ij`, we apply Dijkstra's algorithm to find the least risky routes:
+Using the risk scores $m_{ij}$, we apply Dijkstra's algorithm to find the least risky routes:
 
 - **Penalizing Edges**: Edges with higher risk scores are penalized.
 - **Minimizing Cumulative Risk**: Optimal paths minimize the total accumulated risk.
 
 ### Customer Route Deviation Metric
 
-For each customer `k`, we track their actual routes over a time period `T` and compute their average deviation from the optimal paths:
+For each customer $k$, we track their actual routes over a time period $T$ and compute their average deviation from the optimal paths:
 
-```
-μ_k^T = Average difference in cumulative risk over T
-```
+$$
+\mu_k^T = \text{Average difference in cumulative risk over } T
+$$
 
 ### Pricing Adjustment Function
 
-We adjust the customer's premium based on their deviation metric `μ_k^T`:
+We adjust the customer's premium based on their deviation metric $\mu_k^T$:
 
-```
-σ_k(μ_k^T) = min(- (1_{μ_k^T ∈ I_l} Δ_l + 1_{μ_k^T ∈ I_m} Δ_m + 1_{μ_k^T ∈ I_h} Δ_h) p_k, 0)
-```
+$$
+\sigma_k(\mu_k^T) = \min\left( -\left( 1_{\mu_k^T \in I_l} \Delta_l + 1_{\mu_k^T \in I_m} \Delta_m + 1_{\mu_k^T \in I_h} \Delta_h \right) p_k,\ 0 \right)
+$$
 
 Where:
 
-- `p_k`: Traditional premium for customer `k`.
-- `I_l, I_m, I_h`: Intervals defining low, medium, and high-risk categories.
-- `Δ_l, Δ_m, Δ_h`: Discount factors (values between 0 and 1) for each risk category.
-- `1_{μ_k^T ∈ I_x}`: Indicator function, equal to 1 if `μ_k^T ∈ I_x`, otherwise 0.
+- $p_k$: Traditional premium for customer $k$.
+- $I_l, I_m, I_h$: Intervals defining low, medium, and high-risk categories.
+- $\Delta_l, \Delta_m, \Delta_h$: Discount factors (values between 0 and 1) for each risk category.
+- $1_{\mu_k^T \in I_x}$: Indicator function, equal to 1 if $\mu_k^T \in I_x$, otherwise 0.
 
 The final adjusted premium is:
 
-```
-p_k^* = p_k + σ_k(μ_k^T)
-```
+$$
+p_k^* = p_k + \sigma_k(\mu_k^T)
+$$
 
 ### Traditional Premium Calculation
 
 - **Estimating Expected Loss**:
 
-  ```
-  E[L] = Frequency × Severity
-  ```
+  $$
+  \mathbb{E}[L] = \text{Frequency} \times \text{Severity}
+  $$
 
 - **Applying Load Factor**:
 
-  ```
-  p_k = E[L] × ℓ
-  ```
+  $$
+  p_k = \mathbb{E}[L] \times \ell
+  $$
 
-  Where the load factor `ℓ` is:
+  Where the load factor $\ell$ is:
 
-  ```
-  ℓ = 1 + profit_percentage + margin_of_safety + admin_fee
-  ```
+  $$
+  \ell = 1 + \text{profit\_percentage} + \text{margin\_of\_safety} + \text{admin\_fee}
+  $$
 
 ## Data Sources
 
