@@ -75,21 +75,21 @@ $$
 
 - **Estimating Expected Loss**:
 
-  $$
-  \mathbb{E}[L] = \text{Frequency} \times \text{Severity}
-  $$
+$$
+\mathbb{E}[L] = \text{Frequency} \times \text{Severity}
+$$
 
 - **Applying Load Factor**:
 
-  $$
-  p_k = \mathbb{E}[L] \times \ell
-  $$
+$$
+p_k = \mathbb{E}[L] \times \ell
+$$
 
   Where the load factor $\ell$ is:
 
-  $$
-  \ell = 1 + \text{profit\_percentage} + \text{margin\_of\_safety} + \text{admin\_fee}
-  $$
+$$
+\ell = 1 + \text{profit\_percentage} + \text{margin\_of\_safety} + \text{admin\_fee}
+$$
 
 ## Data Sources
 
