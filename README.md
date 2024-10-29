@@ -19,7 +19,7 @@ This data allows us to assess the inherent risk of specific routes and adjust in
 
 ## Technical Description
 
-![Heatmap](https://github.com/CHENGDU80/fintech80-codes-GT-2024/blob/main/chengdu-model.png)
+![Heatmap](https://github.com/CHENGDU80/fintech80-codes-GT-2024/blob/main/chengdu-model.jpg)
 
 ### Road Network as a Graph
 
