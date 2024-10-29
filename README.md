@@ -22,58 +22,72 @@ Our project introduces a novel car insurance pricing framework that incorporates
 
 ### Computing Risk Metrics for Roads
 
-Each road segment \( m_{ij} \) is assigned a risk score based on:
+Each road segment `m_ij` is assigned a risk score based on:
 
-- **Frequency of Accidents**: Estimated using Poisson regression to calculate the expected time between accidents \( 	au_{	ext{accident}} \).
-- **Severity of Accidents**: Estimated using Gamma regression to determine the severity \( s \).
+- **Frequency of Accidents**: Estimated using Poisson regression to calculate the expected time between accidents `τ_accident`.
+- **Severity of Accidents**: Estimated using Gamma regression to determine the severity `s`.
 
 The risk score is calculated as:
 
-\[ m_{ij} = rac{1}{	au_{	ext{accident}}} 	imes s \]
+```
+m_ij = 1/τ_accident × s
+```
 
 ### Optimal Route Calculation
 
-Using the risk scores \( m_{ij} \), we apply Dijkstra's algorithm to find the least risky routes:
+Using the risk scores `m_ij`, we apply Dijkstra's algorithm to find the least risky routes:
 
 - **Penalizing Edges**: Edges with higher risk scores are penalized.
 - **Minimizing Cumulative Risk**: Optimal paths minimize the total accumulated risk.
 
 ### Customer Route Deviation Metric
 
-For each customer \( k \), we track their actual routes over a time period \( T \) and compute their average deviation from the optimal paths:
+For each customer `k`, we track their actual routes over a time period `T` and compute their average deviation from the optimal paths:
 
-\[ \mu_k^T = 	ext{Average difference in cumulative risk over } T \]
+```
+μ_k^T = Average difference in cumulative risk over T
+```
 
 ### Pricing Adjustment Function
 
-We adjust the customer's premium based on their deviation metric \( \mu_k^T \):
+We adjust the customer's premium based on their deviation metric `μ_k^T`:
 
-\[ \sigma_k(\mu_k^T) = \min\left( -\left( 1_{\mu_k^T \in I_l} \Delta_l + 1_{\mu_k^T \in I_m} \Delta_m + 1_{\mu_k^T \in I_h} \Delta_h ight) p_k,\ 0 ight) \]
+```
+σ_k(μ_k^T) = min(- (1_{μ_k^T ∈ I_l} Δ_l + 1_{μ_k^T ∈ I_m} Δ_m + 1_{μ_k^T ∈ I_h} Δ_h) p_k, 0)
+```
 
 Where:
 
-- \( p_k \): Traditional premium for customer \( k \).
-- \( I_l, I_m, I_h \): Intervals defining low, medium, and high-risk categories.
-- \( \Delta_l, \Delta_m, \Delta_h \): Discount factors (values between 0 and 1) for each risk category.
-- \( 1_{\mu_k^T \in I_x} \): Indicator function, equal to 1 if \( \mu_k^T \in I_x \), otherwise 0.
+- `p_k`: Traditional premium for customer `k`.
+- `I_l, I_m, I_h`: Intervals defining low, medium, and high-risk categories.
+- `Δ_l, Δ_m, Δ_h`: Discount factors (values between 0 and 1) for each risk category.
+- `1_{μ_k^T ∈ I_x}`: Indicator function, equal to 1 if `μ_k^T ∈ I_x`, otherwise 0.
 
 The final adjusted premium is:
 
-\[ p_k^* = p_k + \sigma_k(\mu_k^T) \]
+```
+p_k^* = p_k + σ_k(μ_k^T)
+```
 
 ### Traditional Premium Calculation
 
 - **Estimating Expected Loss**:
 
-  \[ \mathbb{E}[L] = 	ext{Frequency} 	imes 	ext{Severity} \]
+  ```
+  E[L] = Frequency × Severity
+  ```
 
 - **Applying Load Factor**:
 
-  \[ p_k = \mathbb{E}[L] 	imes \ell \]
+  ```
+  p_k = E[L] × ℓ
+  ```
 
-  Where the load factor \( \ell \) is:
+  Where the load factor `ℓ` is:
 
-  \[ \ell = 1 + 	ext{profit\_percentage} + 	ext{margin\_of\_safety} + 	ext{admin\_fee} \]
+  ```
+  ℓ = 1 + profit_percentage + margin_of_safety + admin_fee
+  ```
 
 ## Data Sources
 
