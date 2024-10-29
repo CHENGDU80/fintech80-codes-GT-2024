@@ -11,15 +11,28 @@ np.random.seed(12)
 
 
 def create_synth_data(G, orig_node, dest_node, bbox=(30.5493864, 104.057658, 30.6724752, 104.1682525)):
-
+    """
+    Generate synthetic crash and incident data for road network analysis.
+    
+    Parameters:
+        G (networkx.MultiDiGraph): Road network graph.
+        orig_node (int): Origin node for the synthetic data.
+        dest_node (int): Destination node for the synthetic data.
+        bbox (tuple): Bounding box coordinates (min_lat, min_lon, max_lat, max_lon).
+        
+    Returns:
+        sample_data (pd.DataFrame): DataFrame containing edge-specific attributes and incidents.
+        wait_times (np.array): Generated wait times associated with each edge.
+        severities (np.array): Array of severity levels for incidents on each edge.
+    """
     # ----------------- Crash Data Generation -----------------
-    # Generate random crash points within the bounding box
+    # Generate random and clustered crash points within the bounding box
     num_random_crashes = 200
     random_crash_lats = np.random.uniform(bbox[0], bbox[2], num_random_crashes)
     random_crash_lons = np.random.uniform(bbox[1], bbox[3], num_random_crashes)
     random_crash_points = list(zip(random_crash_lats, random_crash_lons))
 
-    # Generate clusters of crash points
+    # Clustered crash points centered at key locations
     cluster_centers = [
         (30.6, 104.1),
         (30.62, 104.12),
@@ -40,7 +53,7 @@ def create_synth_data(G, orig_node, dest_node, bbox=(30.5493864, 104.057658, 30.
     # Combine random crashes and cluster crashes
     crash_points = random_crash_points + cluster_crash_points
 
-    # Snap crash points to the nearest edges
+    # Snap crash points to the nearest road network edges
     crash_points_snapped = []
     for lat, lon in crash_points:
         nearest_edge = ox.nearest_edges(G, lon, lat)
@@ -52,6 +65,7 @@ def create_synth_data(G, orig_node, dest_node, bbox=(30.5493864, 104.057658, 30.
         snapped_point = edge_line.interpolate(edge_line.project(point))
         crash_points_snapped.append((snapped_point.x, snapped_point.y))
 
+    # ----------------- Incident Generation -----------------
     # Initialize dictionaries to store point and edge incidents
     point_incidents = {}
     edge_incidents = {}
@@ -70,9 +84,12 @@ def create_synth_data(G, orig_node, dest_node, bbox=(30.5493864, 104.057658, 30.
         'Narrow Roads': {'count': 25, 'type': 'edge'}
     }
 
-    # Functions for generating incidents
-
+    # Utility functions to generate incidents in specific areas or road segments
+    
     def generate_incidents_in_areas(area_polygons, count):
+        """
+        Generate point incidents within specified area polygons.
+        """
         incidents = []
         for _ in range(count):
             polygon = area_polygons[np.random.randint(0, len(area_polygons))]
@@ -87,6 +104,9 @@ def create_synth_data(G, orig_node, dest_node, bbox=(30.5493864, 104.057658, 30.
         return incidents
 
     def generate_incidents_near_intersections(G, count):
+        """
+        Generate incidents around intersections (nodes with degree >= 4).
+        """
         intersections = [node for node, degree in G.degree() if degree >= 4]
         incidents = []
         for _ in range(count):
@@ -96,6 +116,9 @@ def create_synth_data(G, orig_node, dest_node, bbox=(30.5493864, 104.057658, 30.
         return incidents
 
     def generate_incidents_randomly(G, count):
+        """
+        Generate incidents randomly across the network nodes.
+        """
         incidents = []
         nodes = list(G.nodes)
         for _ in range(count):
@@ -104,7 +127,12 @@ def create_synth_data(G, orig_node, dest_node, bbox=(30.5493864, 104.057658, 30.
             incidents.append((x, y))
         return incidents
 
+    # Define functions to select road edges based on certain criteria
+
     def edges_in_area(G, area_polygons):
+        """
+        Select edges within specified polygons.
+        """
         edges_in_area = []
         for u, v, k, data in G.edges(keys=True, data=True):
             line = LineString([(G.nodes[u]['x'], G.nodes[u]['y']),
@@ -116,12 +144,23 @@ def create_synth_data(G, orig_node, dest_node, bbox=(30.5493864, 104.057658, 30.
         return edges_in_area
 
     def select_long_edges(G):
+        """
+        Select edges longer than 500 meters.
+        """
         return [(u, v, k) for u, v, k, data in G.edges(keys=True, data=True) if data['length'] > 500]
 
     def select_main_edges(G):
+        """
+        Selects primary road edges in the network.
+        """
         return [(u, v, k) for u, v, k, data in G.edges(keys=True, data=True) if data.get('highway') == 'primary']
 
+    # Generate point and edge incidents based on incident type specifications
+
     def select_narrow_edges(G):
+        """
+        Selects narrow edges based on road width below 5 meters.
+        """
         narrow_edges = []
         for u, v, k, data in G.edges(keys=True, data=True):
             width = data.get('width', '5')
