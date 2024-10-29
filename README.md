@@ -120,11 +120,9 @@ $$
 ```
 .
 ├── README.md
-├── model.png
-├── heatmap.png
-├── client_gui.png
-├── server_gui.png
-├── profit.png
+├── Chengdu.png
+├── Heatmap.png
+├── chengdu-model.jpg
 ├── preprocessing_pipeline
 │   ├── classic_pricing_model
 │   │   └── behavioral_risk_modeler.py
