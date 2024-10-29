@@ -151,9 +151,9 @@ $$
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
 
-## Team
 
-We are a dedicated team participating in a prestigious competitive hackathon, aiming to revolutionize car insurance pricing models with data-driven risk assessments.
+## Team members
+Moyi Guo, Junyuan Quan, Arya Nahri, Javad Aslanov, Piya Ranka, Nicholas Meyer
 
 ## Additional Resources
 
