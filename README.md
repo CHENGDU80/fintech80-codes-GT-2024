@@ -5,7 +5,7 @@
 
 ## Overview
 
-Our project introduces a novel car insurance pricing framework that incorporates **route risk** into premium calculations. 
+Our team, Georgia Tech, introduces a novel car insurance pricing framework that incorporates **route risk** into premium calculations. 
 With the increased adoption of autonomous and semi-autonomous vehicles (AVs), detailed route data for drivers is now accessible. 
 This data allows us to assess the inherent risk of specific routes and adjust insurance premiums accordingly.
 
