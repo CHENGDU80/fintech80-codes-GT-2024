@@ -88,7 +88,7 @@ $$
   Where the load factor $\ell$ is:
 
 $$
-\ell = 1 + \text{profit\_percentage} + \text{margin\_of\_safety} + \text{admin\_fee}
+\ell = 1 + \text{profit percentage} + \text{margin of safety} + \text{admin fee}
 $$
 
 ## Data Sources
