@@ -1,6 +1,8 @@
 
 # Route Risk-Based Car Insurance Pricing Model
 
+![Heatmap](https://github.com/CHENGDU80/fintech80-codes-GT-2024/blob/main/Heatmap.png)
+
 ## Overview
 
 Our project introduces a novel car insurance pricing framework that incorporates **route risk** into premium calculations. 
@@ -16,6 +18,8 @@ This data allows us to assess the inherent risk of specific routes and adjust in
 - **Profit Analysis**: Analyzes the impact of the new pricing model on the insurance company's profitability.
 
 ## Technical Description
+
+![Heatmap](https://github.com/CHENGDU80/fintech80-codes-GT-2024/blob/main/chengdu-model.png)
 
 ### Road Network as a Graph
 
